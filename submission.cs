@@ -46,10 +46,15 @@ namespace ConsoleApp1
 
             try
             {
-                // Load the schema and set up validation settings
+                // Download and load the XSD schema from string
                 XmlSchemaSet schemas = new XmlSchemaSet();
-                schemas.Add(null, xsdUrl);
+                using (StringReader xsdStringReader = new StringReader(DownloadContent(xsdUrl)))
+                using (XmlReader xsdReader = XmlReader.Create(xsdStringReader))
+                {
+                    schemas.Add(null, xsdReader);
+                }
 
+                // Set up validation settings
                 XmlReaderSettings settings = new XmlReaderSettings();
                 settings.Schemas = schemas;
                 settings.ValidationType = ValidationType.Schema;
@@ -58,8 +63,9 @@ namespace ConsoleApp1
                     errors += e.Message + "\n";
                 };
 
-                // Read through the XML to trigger validation
-                using (XmlReader reader = XmlReader.Create(xmlUrl, settings))
+                // Download and validate the XML from string
+                using (StringReader xmlStringReader = new StringReader(DownloadContent(xmlUrl)))
+                using (XmlReader reader = XmlReader.Create(xmlStringReader, settings))
                 {
                     while (reader.Read()) { }
                 }
@@ -77,11 +83,11 @@ namespace ConsoleApp1
 
         public static string Xml2Json(string xmlUrl)
         {
-            // The returned jsonText needs to be deserializable by Newtonsoft.Json package. (JsonConvert.DeserializeXmlNode(jsonText))
+            // The returned jsonText needs to be de-serializable by Newtonsoft.Json package. (JsonConvert.DeserializeXmlNode(jsonText))
             XmlDocument doc = new XmlDocument();
-            doc.Load(xmlUrl);
+            doc.LoadXml(DownloadContent(xmlUrl));
 
-            // Serialize the XML document to JSON
+            // Serialize the XML document to a JSON string
             string jsonText = JsonConvert.SerializeXmlNode(doc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
             return jsonText;
         }
