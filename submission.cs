@@ -19,7 +19,6 @@ namespace ConsoleApp1
 
     public class Submission
     {
-        // URLs pointing to the hosted XML and XSD files on GitHub
         public static string xmlURL = "https://raw.githubusercontent.com/abinu2/CSE445-A4/main/NationalParks.xml";
         public static string xmlErrorURL = "https://raw.githubusercontent.com/abinu2/CSE445-A4/main/NationalParksErrors.xml";
         public static string xsdURL = "https://raw.githubusercontent.com/abinu2/CSE445-A4/main/NationalParks.xsd";
@@ -42,7 +41,7 @@ namespace ConsoleApp1
         // Q2.1
         public static string Verification(string xmlUrl, string xsdUrl)
         {
-            //return "No Error" if XML is valid. Otherwise, return the desired exception message.
+            //return "No errors are found" if XML is valid. Otherwise, return the desired exception message.
             string errors = "";
 
             try
@@ -71,14 +70,14 @@ namespace ConsoleApp1
             }
 
             if (string.IsNullOrEmpty(errors))
-                return "No Error";
+                return "No errors are found";
             else
                 return errors.TrimEnd();
         }
 
         public static string Xml2Json(string xmlUrl)
         {
-            // The returned jsonText needs to be de-serializable by Newtonsoft.Json package. (JsonConvert.DeserializeXmlNode(jsonText))
+            // The returned jsonText needs to be deserializable by Newtonsoft.Json package. (JsonConvert.DeserializeXmlNode(jsonText))
             XmlDocument doc = new XmlDocument();
             doc.Load(xmlUrl);
 
