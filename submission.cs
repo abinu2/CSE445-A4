@@ -64,7 +64,7 @@ namespace ConsoleApp1
                     while (reader.Read()) { }
                 }
             }
-            catch (XmlException ex)
+            catch (Exception ex)
             {
                 errors += ex.Message + "\n";
             }
