@@ -19,20 +19,22 @@ namespace ConsoleApp1
 
     public class Submission
     {
-        public static string xmlURL = "https://allanjiang17.github.io/CSE445-A4/NationalParks.xml";
-        public static string xmlErrorURL = "https://allanjiang17.github.io/CSE445-A4/NationalParksErrors.xml";
-        public static string xsdURL = "https://allanjiang17.github.io/CSE445-A4/NationalParks.xsd";
+        // URLs pointing to the hosted XML and XSD files on GitHub
+        public static string xmlURL = "https://raw.githubusercontent.com/abinu2/CSE445-A4/main/NationalParks.xml";
+        public static string xmlErrorURL = "https://raw.githubusercontent.com/abinu2/CSE445-A4/main/NationalParksErrors.xml";
+        public static string xsdURL = "https://raw.githubusercontent.com/abinu2/CSE445-A4/main/NationalParks.xsd";
 
         public static void Main(string[] args)
         {
+            // Verify valid XML against schema
             string result = Verification(xmlURL, xsdURL);
             Console.WriteLine(result);
 
-
+            // Verify error XML against schema
             result = Verification(xmlErrorURL, xsdURL);
             Console.WriteLine(result);
 
-
+            // Convert valid XML to JSON
             result = Xml2Json(xmlURL);
             Console.WriteLine(result);
         }
@@ -45,6 +47,7 @@ namespace ConsoleApp1
 
             try
             {
+                // Load the schema and set up validation settings
                 XmlSchemaSet schemas = new XmlSchemaSet();
                 schemas.Add(null, xsdUrl);
 
@@ -56,6 +59,7 @@ namespace ConsoleApp1
                     errors += e.Message + "\n";
                 };
 
+                // Read through the XML to trigger validation
                 using (XmlReader reader = XmlReader.Create(xmlUrl, settings))
                 {
                     while (reader.Read()) { }
@@ -78,6 +82,7 @@ namespace ConsoleApp1
             XmlDocument doc = new XmlDocument();
             doc.Load(xmlUrl);
 
+            // Serialize the XML document to JSON
             string jsonText = JsonConvert.SerializeXmlNode(doc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
             return jsonText;
         }
